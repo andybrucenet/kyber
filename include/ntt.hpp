@@ -188,7 +188,7 @@ static inline constexpr void
 basemul(std::span<const field::zq_t, 2> f, // degree-1 polynomial
         std::span<const field::zq_t, 2> g, // degree-1 polynomial
         std::span<field::zq_t, 2> h,       // degree-1 polynomial
-        const field::zq_t ζ                // zeta
+        const field::zq_t zeta             // zeta
 )
 {
   field::zq_t f0 = f[0];
@@ -196,7 +196,7 @@ basemul(std::span<const field::zq_t, 2> f, // degree-1 polynomial
 
   f0 *= g[0];
   f1 *= g[1];
-  f1 *= ζ;
+  f1 *= zeta;
   f1 += f0;
 
   h[0] = f1;

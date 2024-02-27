@@ -48,14 +48,14 @@ public:
   inline constexpr zq_t operator+(const zq_t rhs) const
   {
     const uint32_t t = this->v + rhs.v;
-    return zq_t(reduce_once(t));
+    return zq_t(static_cast<uint16_t>(reduce_once(t)));
   }
 
   // Compound modulo addition of two Zq elements.
   inline constexpr void operator+=(const zq_t rhs) { *this = *this + rhs; }
 
   // Modulo negation of a Zq element.
-  inline constexpr zq_t operator-() const { return zq_t(Q - this->v); }
+  inline constexpr zq_t operator-() const { return zq_t(static_cast<uint16_t>(Q - this->v)); }
 
   // Modulo subtraction of one Zq element from another one.
   inline constexpr zq_t operator-(const zq_t rhs) const { return *this + (-rhs); }
@@ -85,14 +85,14 @@ public:
     const zq_t br[]{ zq_t(1), base };
     zq_t res = br[n & 0b1ul];
 
-    const size_t zeros = std::countl_zero(n);
+    const size_t zeros = static_cast<size_t>(std::countl_zero(n));
     const size_t till = 64ul - zeros;
 
     for (size_t i = 1; i < till; i++) {
       base = base * base;
 
-      const zq_t br[]{ zq_t(1), base };
-      res = res * br[(n >> i) & 0b1ul];
+      const zq_t br_inner[]{ zq_t(1), base };
+      res = res * br_inner[(n >> i) & 0b1ul];
     }
 
     return res;
@@ -120,7 +120,7 @@ public:
     uint16_t res = 0;
     prng.read(std::span(reinterpret_cast<uint8_t*>(&res), sizeof(res)));
 
-    return zq_t(barrett_reduce(static_cast<uint32_t>(res)));
+    return zq_t(static_cast<uint16_t>(barrett_reduce(static_cast<uint32_t>(res))));
   }
 
 private:
